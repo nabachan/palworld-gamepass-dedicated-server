@@ -1,0 +1,25 @@
+# Git
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# Local secrets / real configs (never commit)
+config/PalWorldSettings.ini
+config/local.ps1
+*.pem
+*.key
+.env
+.env.*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local runtime leftovers if someone installs inside the repo by mistake
+steamcmd/
+server/
+backups/
+logs/
