@@ -7,6 +7,22 @@ Ce projet n’est **pas** affilié à Pocketpair, Steam, Microsoft ou Xbox.
 
 ---
 
+## Aperçu du dashboard
+
+![Palworld Server Manager — vue d’ensemble](docs/screenshots/hero.png)
+
+**[▶ Vidéo démo de l’interface (MP4)](docs/screenshots/demo-ui.mp4)** · [Galerie d’écrans](docs/screenshots/README.md)
+
+| Joueurs | Configuration |
+|:--:|:--:|
+| ![Joueurs](docs/screenshots/02-players.png) | ![Configuration](docs/screenshots/03-config.png) |
+
+| Logs live | Paramètres |
+|:--:|:--:|
+| ![Logs](docs/screenshots/05-logs.png) | ![Paramètres](docs/screenshots/08-settings.png) |
+
+---
+
 ## Deux façons d’administrer
 
 | | Scripts PowerShell | Dashboard GUI |

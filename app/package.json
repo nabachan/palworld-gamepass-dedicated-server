@@ -19,7 +19,8 @@
     "pack": "npm run build && electron-builder --dir",
     "dist": "npm run build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win portable && node -e \"require('fs').mkdirSync('../release',{recursive:true}); require('fs').copyFileSync('release/PalworldServerManager.exe','../release/PalworldServerManager.exe'); console.log('Copied to ../release/')\"",
     "dist:linux": "npm run build && electron-builder --linux AppImage",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "capture-ui": "bash scripts/capture-ui.sh"
   },
   "dependencies": {
     "chokidar": "^4.0.3",
@@ -55,14 +56,18 @@
       {
         "from": "resources",
         "to": "resources",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "win": {
       "target": [
         {
           "target": "portable",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "artifactName": "PalworldServerManager.${ext}",
@@ -72,7 +77,9 @@
       "artifactName": "PalworldServerManager.exe"
     },
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "artifactName": "PalworldServerManager.${ext}",
       "category": "Utility"
     },

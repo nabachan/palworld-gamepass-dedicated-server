@@ -79,8 +79,9 @@ app/
 - **Icône app** : icône Electron par défaut (pas d’asset brand custom fourni).
 - **Fonts** : Nunito/Outfit chargées depuis Google Fonts si réseau dispo ; fallback Segoe UI sinon.
 
-## Build final
+## Captures d’interface (2026-07-14)
 
-- Exécutable portable : `app/release/PalworldServerManager.exe`
-- Version décompressée : `app/release/win-unpacked/PalworldServerManager.exe`
-- Relancer : `cd app && npm run dist` (Wine requis pour cross-build Linux → Windows)
+- Ajout de `docs/screenshots/` : PNGs de chaque panneau + `demo-ui.mp4`
+- Script de regen : `app/scripts/capture-ui.sh` (Xvfb + Electron `capturePage` + ffmpeg)
+- Mode `PSM_AUTO_CAPTURE=1` / `PSM_SEED_JSON` pour seed automatique des settings en capture
+- README racine + `app/README.md` enrichis avec hero, galerie et lien vidéo

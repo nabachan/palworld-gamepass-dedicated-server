@@ -6,6 +6,21 @@ Dashboard desktop **Electron + React + TypeScript** pour administrer un serveur 
 > Ce dossier `app/` contient l’application GUI.  
 > Les scripts PowerShell / templates SteamCMD du dépôt parent restent disponibles pour installer le serveur.
 
+## Aperçu de l’interface
+
+![Vue d’ensemble](../docs/screenshots/hero.png)
+
+[Vidéo démo (MP4)](../docs/screenshots/demo-ui.mp4) · [Galerie complète](../docs/screenshots/README.md)
+
+<p align="center">
+  <img src="../docs/screenshots/02-players.png" alt="Joueurs" width="48%" />
+  <img src="../docs/screenshots/03-config.png" alt="Configuration" width="48%" />
+</p>
+<p align="center">
+  <img src="../docs/screenshots/05-logs.png" alt="Logs" width="48%" />
+  <img src="../docs/screenshots/08-settings.png" alt="Paramètres" width="48%" />
+</p>
+
 ## Prérequis (développement)
 
 - Node.js 20+
