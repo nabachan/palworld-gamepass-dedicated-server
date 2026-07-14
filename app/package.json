@@ -1,0 +1,85 @@
+{
+  "name": "palworld-server-manager",
+  "version": "1.0.0",
+  "description": "Desktop dashboard for managing a Palworld dedicated server",
+  "main": "./out/main/index.js",
+  "author": "Palworld Server Manager",
+  "license": "MIT",
+  "homepage": "./",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "tsx scripts/e2e-test.ts",
+    "test:smoke": "tsx scripts/smoke-test.ts",
+    "simulator": "node resources/mock-palworld-server.js",
+    "pack": "npm run build && electron-builder --dir",
+    "dist": "npm run build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win portable && node -e \"require('fs').mkdirSync('../release',{recursive:true}); require('fs').copyFileSync('release/PalworldServerManager.exe','../release/PalworldServerManager.exe'); console.log('Copied to ../release/')\"",
+    "dist:linux": "npm run build && electron-builder --linux AppImage",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "rcon-client": "^4.2.5",
+    "systeminformation": "^5.25.11"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^34.3.0",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^3.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "vitest": "^3.0.8"
+  },
+  "build": {
+    "appId": "com.palworld.servermanager",
+    "productName": "PalworldServerManager",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "out/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources",
+        "to": "resources",
+        "filter": ["**/*"]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "PalworldServerManager.${ext}",
+      "executableName": "PalworldServerManager"
+    },
+    "portable": {
+      "artifactName": "PalworldServerManager.exe"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "artifactName": "PalworldServerManager.${ext}",
+      "category": "Utility"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "PalworldServerManager-Setup.${ext}"
+    }
+  }
+}
