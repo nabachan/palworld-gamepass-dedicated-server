@@ -59,6 +59,91 @@ function createWindow(): void {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  if (process.env.PSM_AUTO_CAPTURE === '1') {
+    mainWindow.webContents.on('did-finish-load', () => {
+      void runAutoCapture(mainWindow!)
+    })
+  }
+}
+
+async function runAutoCapture(win: BrowserWindow): Promise<void> {
+  const fs = await import('fs')
+  const outDir = process.env.PSM_CAPTURE_DIR || path.join(process.cwd(), '..', 'docs', 'screenshots')
+  fs.mkdirSync(outDir, { recursive: true })
+
+  const pages = [
+    { label: "Vue d'ensemble", file: '01-overview.png', extra: 'start' },
+    { label: 'Joueurs', file: '02-players.png' },
+    { label: 'Configuration', file: '03-config.png' },
+    { label: 'Sauvegardes', file: '04-backups.png' },
+    { label: 'Logs', file: '05-logs.png' },
+    { label: 'Annonces', file: '06-broadcast.png', extra: 'broadcast' },
+    { label: 'Mods', file: '07-mods.png' },
+    { label: 'Paramètres', file: '08-settings.png' }
+  ]
+
+  const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms))
+  await sleep(2500)
+
+  for (const page of pages) {
+    await win.webContents.executeJavaScript(`
+      (() => {
+        const buttons = [...document.querySelectorAll('button.nav-btn')];
+        const btn = buttons.find(b => (b.textContent || '').includes(${JSON.stringify(page.label)}));
+        if (btn) btn.click();
+        return btn ? (btn.textContent || '').trim() : 'NOT_FOUND';
+      })()
+    `)
+    await sleep(900)
+
+    if (page.extra === 'start') {
+      await win.webContents.executeJavaScript(`
+        (() => {
+          const btn = [...document.querySelectorAll('button')].find(b => /^\\s*Start\\s*$/i.test(b.textContent || ''));
+          if (btn) btn.click();
+          return !!btn;
+        })()
+      `)
+      await sleep(2500)
+      const online = await win.capturePage()
+      fs.writeFileSync(path.join(outDir, '01b-overview-online.png'), online.toPNG())
+      appLogger.info('Captured 01b-overview-online.png')
+    }
+
+    if (page.extra === 'broadcast') {
+      await win.webContents.executeJavaScript(`
+        (() => {
+          const ta = document.querySelector('textarea');
+          if (ta) {
+            const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value')?.set;
+            setter?.call(ta, 'Maintenance dans 5 minutes — bonne chasse !');
+            ta.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+          return !!ta;
+        })()
+      `)
+      await sleep(400)
+    }
+
+    const img = await win.capturePage()
+    fs.writeFileSync(path.join(outDir, page.file), img.toPNG())
+    appLogger.info(`Captured ${page.file}`)
+  }
+
+  // Cover = overview again
+  await win.webContents.executeJavaScript(`
+    [...document.querySelectorAll('button.nav-btn')].find(b => (b.textContent||'').includes("Vue d'ensemble"))?.click()
+  `)
+  await sleep(1000)
+  const cover = await win.capturePage()
+  fs.writeFileSync(path.join(outDir, '00-cover.png'), cover.toPNG())
+  fs.writeFileSync(path.join(outDir, 'hero.png'), cover.toPNG())
+  appLogger.info('Auto-capture complete')
+
+  // Signal for shell wrapper
+  fs.writeFileSync(path.join(outDir, '.capture-done'), new Date().toISOString())
+  app.quit()
 }
 
 function sendToast(payload: ToastPayload): void {
@@ -258,6 +343,18 @@ function startStatusLoop(): void {
 
 app.whenReady().then(() => {
   appLogger.info('App starting', { version: app.getVersion(), platform: process.platform })
+
+  // Optional seed for UI capture / automated demos (never used in normal runs)
+  if (process.env.PSM_SEED_JSON) {
+    try {
+      const seed = JSON.parse(process.env.PSM_SEED_JSON) as Record<string, unknown>
+      saveSettings(seed)
+      appLogger.info('Applied PSM_SEED_JSON settings for capture/demo')
+    } catch (err) {
+      appLogger.error('Invalid PSM_SEED_JSON', err)
+    }
+  }
+
   registerIpc()
   createWindow()
   logWatcher.start()

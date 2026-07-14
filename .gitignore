@@ -32,6 +32,8 @@ app/dist/
 app/simulator-data/
 app/simulator-data-e2e/
 app/simulator-data-smoke/
+app/simulator-data-capture/
+app/.capture-userdata/
 app/PSM_Backups/
 app/*.tsbuildinfo
 
