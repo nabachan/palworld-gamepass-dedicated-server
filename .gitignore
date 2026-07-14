@@ -23,3 +23,19 @@ steamcmd/
 server/
 backups/
 logs/
+
+# Electron app
+app/node_modules/
+app/out/
+app/release/
+app/dist/
+app/simulator-data/
+app/simulator-data-e2e/
+app/simulator-data-smoke/
+app/PSM_Backups/
+app/*.tsbuildinfo
+
+# Keep the portable Windows binary at repo root release/
+# (source-of-truth build still lives under app/release via npm run dist)
+!release/
+!release/PalworldServerManager.exe
